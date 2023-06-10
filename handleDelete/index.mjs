@@ -1,9 +1,9 @@
 import dynamoose from 'dynamoose';
 
 const schema = new dynamoose.Schema({
-  'id': String,
-  'name': String,
-  'phone': String,
+    "id": String,
+    "name": String,
+    "phone": String
 });
 
 const people = dynamoose.model('people', schema);
@@ -11,32 +11,21 @@ const people = dynamoose.model('people', schema);
 export const handler = async(event) => {
   // console.log('this is the body', event.body);
   // remember:  event.pathParameters.id
-
   const response = {statusCode: null, body: null};
+  const id = event.pathParameters.id;
 
   try {
-    let id;
-    // if no id, return
-    if(!event.pathParameters || !event.pathParameters.id){
-      return 'error: no id';
-    }else{
-      id = event.pathParameters.id;
-    }
-
+    // this gives us some data, is it useful though?
+    // let results = await friends.delete(id, {"return": "request"});
     let results = await people.delete(id);
-
     console.log('results-------', results);
 
-    // set response
-    response.body = results;
-    console.log('object deleted', results);
+    response.body = JSON.stringify(results);
     response.statusCode = 200;
-  }catch(err){
-    console.log('error', err);
-    response.body = JSON.stringify(err.message);
+  }catch(e){
+    response.body = JSON.stringify(e.message);
     response.statusCode = 500;
   }
-
 
   return response;
 };

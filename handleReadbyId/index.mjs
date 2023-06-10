@@ -1,22 +1,22 @@
 import dynamoose from 'dynamoose';
 
 const schema = new dynamoose.Schema({
-  'id': String,
-  'name': String,
-  'phone': String,
+    "id": String,
+    "name": String,
+    "phone": String
 });
 
 const people = dynamoose.model('people', schema);
 
 export const handler = async(event) => {
-  console.log('this is the body', event.body);
-
-  const response = {statusCode: null, body: null};
+  // console.log('this is the body', event.body);
+  // remember:  event.pathParameters.id
+  const response = {statusCode: null, body: null,};
   const id = event.pathParameters.id;
-  let parsedBody = JSON.parse(event.body);
+  console.log('id', id);
 
   try {
-    let results = await people.update({ id }, parsedBody);
+    let results = await people.get(id);
     console.log('results-------', results);
 
     response.body = JSON.stringify(results);
